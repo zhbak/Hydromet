@@ -3,4 +3,6 @@ services:
   bot:
     build: 
       context: .
+    env_file:
+      - stack.env
     container_name: hydromet_bot
