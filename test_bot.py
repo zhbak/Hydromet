@@ -1,7 +1,7 @@
 import telebot, os, time, shutil, json
 import introduction.TR_to_gpt as tr
 from dotenv import load_dotenv
-from hydromet_stations.report_template import doc_report, meteostation_map, table_map_paste
+from hydromet_stations.report_template import doc_report, station_map, table_map_paste
 
 # Подгрузка ключей
 load_dotenv()
@@ -121,7 +121,7 @@ def introduction(message : telebot.types.Message):
 @bot.message_handler(commands=['hydromet_stations'])
 # Приветствие
 def introduction_start(message : telebot.types.Message):
-    start_text = """Напиши координаты участка изысканий через запятую в десятичном формате. Пример: 55.702969, 37.530752"""
+    start_text = """Напиши координаты участка изысканий через запятую и пробел в десятичном формате. Пример: 55.70, 37.53"""
     bot.send_message(message.chat.id, start_text)
 
     user_status[message.chat.id] = 'waiting_for_coordinates'
@@ -136,17 +136,37 @@ def hydromet_stations(message : telebot.types.Message):
         coordinates = [float(item) for item in coordinates]
         latitude = coordinates[0]
         longitude = coordinates[1]
-        meteostation_map('pk.eyJ1Ijoia2lyaWxsemhiYWtvdiIsImEiOiJjajRpcGp1NWMwYzJrMzJwZ2RzMGhxOG5uIn0.THsBR9cHFM49Zq1yJ85maw',
-                          "hydromet_stations/meteostation_map.jpg",
-                           latitude,
-                           longitude)
         
-        table_map_paste(latitude, longitude, "hydromet_stations/meteostations_0.csv",
-                                "hydromet_stations/meteostation_map.jpg", 
-                                "hydromet_stations/hydromet_stations_template.docx",
-                                "hydromet_stations/hydromet_stations_output.docx")
+        # Карта метостанций
+        station_map(
+                    mapbox_token,
+                    "hydromet_stations/meteostation_map.jpg",
+                    latitude,
+                    longitude,
+                    "https://api.mapbox.com/styles/v1/kirillzhbakov/clpvgcma1001q01pj1yqqcxem/static"
+                    )
+        print("Meteostation map created.")
+
+        # Карта гидрологических постов
+        station_map(
+                    mapbox_token,
+                    "hydromet_stations/hydrostation_map.jpg",
+                    latitude,
+                    longitude,
+                    "https://api.mapbox.com/styles/v1/kirillzhbakov/clrbxrhvz009d01pi0ziz45sj/static"
+                    )
+        print("Hydrostation map created.")
+
+        # Вставка карт и таблиц в документ
+        table_map_paste(
+                        latitude, longitude,
+                        "hydromet_stations/meteostations_0.csv", "hydromet_stations/meteostation_map.jpg",
+                        "hydromet_stations/hydro_stations.csv", "hydromet_stations/hydrostation_map.jpg",
+                        "hydromet_stations/hydromet_stations_template.docx", "hydromet_stations/hydromet_stations_output.docx"
+                        )
+        print("Output docx created.")
     
-        bot.reply_to(message, "Метеорологическая изученность:")
+        bot.reply_to(message, "Гидрометеорологическая изученность:")
             # Отправка файла клиенту
         with open("hydromet_stations/hydromet_stations_output.docx", 'rb') as f:
             bot.send_document(message.chat.id, f)
