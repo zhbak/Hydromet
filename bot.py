@@ -5,7 +5,7 @@ from hydromet_stations.report_template import doc_report, station_map, table_map
 
 # Подгрузка ключей
 load_dotenv()
-bot_token = os.environ.get("HYDRO_TEST_BOT_TOKEN")
+bot_token = os.environ.get("HYDROMETBOT_TOKEN")
 KEY_convert = os.environ.get("API_Secret_convert")
 mapbox_token = os.environ.get("MAPBOX_TOKEN")
 bot = telebot.TeleBot(bot_token)
