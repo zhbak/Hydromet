@@ -21,7 +21,7 @@ def start(message : telebot.types.Message):
 Доступны следующие инструменты:
 - /start - основная информация о боте;
 - /introduction - создание введения;
-- /hydromet_stations - предоставление метеорологической изученности по координатам.
+- /hydromet_stations - предоставление гидрометеорологической изученности по координатам.
     '''.format(message.from_user.first_name)
     
      # ответ с коммандами
