@@ -38,13 +38,15 @@ def GB_to_Profiles_tranformation(chat_id, folder_name, zip_path_input, zip_path_
                 # Удаление лишних столбцов
                 GB_profile_df = GB_profile_df.drop(["ID","X","Y","Distance (Segment)","Distance 3D (Segment)","Distance 3D (Total)","Slope (Degrees)","Slope (Percent)","Segment Index"], axis=1)
                 
+                """
                 # Удаление строк через одну, пока размер не станет 50 или меньше
                 while len(GB_profile_df) > 50:
                     # Получаем индексы строк, которые нужно удалить (каждый второй индекс)
                     indices_to_drop = GB_profile_df.index[1::2]
                     # Удаляем строки
                     GB_profile_df = GB_profile_df.drop(indices_to_drop)
-                
+                """
+                 
                 Profiles_profile = GB_profile_df
                 
                 Profiles_profile = Profiles_profile.rename(columns={"Elevation" : "H,m", "Distance (Total)" : "B,m"})
@@ -56,7 +58,7 @@ def GB_to_Profiles_tranformation(chat_id, folder_name, zip_path_input, zip_path_
                 Profiles_profile.loc[0, "L,km"] = 0
 
                 file_name = file_name.replace(".csv", '')
-                Profiles_profile.to_csv(os.path.join(folder_path, f"{file_name}.txt"), sep="\t", index=False)
+                Profiles_profile.to_csv(os.path.join(folder_path, f"{file_name}.txt"), sep="\t", index=False, encoding="utf-8")
 
     # Удаление input zip
     if os.path.exists(zip_path_input):

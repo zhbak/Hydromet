@@ -143,7 +143,7 @@ def introduction(message : telebot.types.Message):
             del user_status[message.chat.id]
 
         else:
-            bot.reply_to(message, "Пожалуйста, отправьте документ после ввода команды или пришлите верный формат файла")
+            bot.reply_to(message, "Пожалуйста, отправьте документ после ввода команды")
     
     except Exception as e:
         bot.reply_to(message, e)
@@ -219,7 +219,7 @@ def hydromet_stations(message : telebot.types.Message):
         del user_status[message.chat.id]
 
     else: 
-        bot.reply_to(message, 'Пожалуйста, отправьте сообщение после ввода команды')
+        bot.reply_to(message, 'Пожалуйста, отправьте сообщение после ввода команды или пришлите верный формат файла')
 
 if __name__ == "__main__":
     print('Hydromet_bot started.')
